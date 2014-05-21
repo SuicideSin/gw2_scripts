@@ -5,26 +5,26 @@ _karma = { 'karma' : (0, 0, None), }
 
 _food = {
 	'bowl_of_lemongrass_poultry_soup' : (12481, 3, {
-		'coconut'							: (12350, 3, _karma),
-		'bowl_of_herbeb_poultry_stock'		: (12490, 3,
+		'coconut' : (12350, 3, _karma),
+		'bowl_of_herbeb_poultry_stock' : (12490, 3,
 		{
-			'pile_of_simple_stew_herbs' 	: (12179, 1,
+			'pile_of_simple_stew_herbs' : (12179, 1,
 				{
-					'bay_leaf'				: (12247, 1, None),
-					'thyme_leaf'		    : (12248, 1, None),
+					'bay_leaf' : (12247, 1, None),
+					'thyme_leaf' : (12248, 1, None),
 				}),
-				'bowl_of_poultry_stock'	    : (12202, 1,
+				'bowl_of_poultry_stock' : (12202, 1,
 				{
-					'carrot'				: (12134, 2, None),
-					'onion'					: (12142, 2, None),
-					'jug_of_water'			: (12156, 1, None),
-					'slab_of_poultry_meat'	: (24360, 1, None),
+					'carrot' : (12134, 2, None),
+					'onion'	: (12142, 2, None),
+					'jug_of_water' : (12156, 1, None),
+					'slab_of_poultry_meat' : (24360, 1, None),
 				}),
-			'sage_leaf'						: (12243, 1, None),
-			'rosemary_sprig'				: (12335, 1, None),
+			'sage_leaf' : (12243, 1, None),
+			'rosemary_sprig' : (12335, 1, None),
 		}),
-		'lemongrass'						: (12546, 3, None),
-		'slab_of_poultry_meat'				: (24360, 3, None),
+		'lemongrass' : (12546, 3, None),
+		'slab_of_poultry_meat' : (24360, 3, None),
 	}),
 
 	'loaf_of_saffron_bread' : (12474, 1, {
