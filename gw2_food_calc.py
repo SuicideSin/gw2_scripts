@@ -40,8 +40,14 @@ def calc_item_cost(spidy, item, name, times_needed, rec):
 	if item[2] is not None:
 		if 'karma' in item[2]:
 			not_buyable = 1
+		elif 'vendor' in item[2]:
+			not_buyable = 3
 		else:
 			for k in sorted(item[2].keys()):
+				if k == 'dontbuy':
+					not_buyable = 2
+					continue
+
 				(subcost, subdesc) = calc_item_cost(spidy, item[2][k], k, times_needed,	rec + 1)
 				prod_costs = prod_costs + subcost
 				item_desc = item_desc + subdesc
@@ -51,9 +57,12 @@ def calc_item_cost(spidy, item, name, times_needed, rec):
 		one_item = 0
 		cost = 0
 		buy = 2
-	elif buy_cost > prod_costs and prod_costs > 0:
+	elif ( buy_cost > prod_costs and prod_costs > 0 ) or not_buyable == 2:
 		one_item = prod_costs / times
 		cost = prod_costs
+	elif not_buyable == 3:
+		buy = 3
+		cost = buy_cost
 	else:
 		buy = 1
 		cost = buy_cost
@@ -97,7 +106,8 @@ def calc_cost(spidy, item, times, name):
 def main(item_name, times):
 	spidy = GW2Spidy()
 
-	item_recipe = GW2Recipes['food'][item_name]
+	dict = [d for d in GW2Recipes.values() if item_name in d]
+	item_recipe = dict[0][item_name]
 	item_spidy = spidy.getItem(item_recipe[0])
 
 	times = int(times / item_recipe[1])
@@ -129,9 +139,10 @@ def main(item_name, times):
 	print("income after taxes:  {}".format(copper_to_currency(income_tax)))
 
 	print()
-	print("request - sale - ratio: {} - {} - {}".format(
-		item_spidy["offer_availability"], item_spidy["sale_availability"],
-		float(item_spidy["offer_availability"]) / float(item_spidy["sale_availability"])))
+	if float(item_spidy["sale_availability"]) != 0:
+		print("request - sale - ratio: {} - {} - {}".format(
+			item_spidy["offer_availability"], item_spidy["sale_availability"],
+			float(item_spidy["offer_availability"]) / float(item_spidy["sale_availability"])))
 	print("sale/offer price change (last hour): {} / {}".format(
 		item_spidy["sale_price_change_last_hour"], item_spidy["offer_price_change_last_hour"]))
 
@@ -150,9 +161,21 @@ def main(item_name, times):
 		copper_to_currency(income_tax - costs)
 	))
 
-parser = argparse.ArgumentParser(description='calculate profit for item-production')
-parser.add_argument('item', type=str, choices=sorted(GW2Recipes['food'].keys()),
-					help="what item shall be produced")
+class SmartFormatter(argparse.HelpFormatter):
+	def _split_lines(self, text, width):
+		# this is the RawTextHelpFormatter._split_lines
+		if text.startswith('R|'):
+			return text[2:].splitlines()
+		return argparse.HelpFormatter._split_lines(self, text, width)
+
+valid_items = []
+for c in sorted(GW2Recipes.keys()):
+	valid_items.extend(sorted(GW2Recipes[c].keys()))
+
+parser = argparse.ArgumentParser(description='calculate profit for item-production', formatter_class=SmartFormatter)
+parser.add_argument('item', type=str, choices=valid_items,
+					help="R|what item shall be produced, valid items are: \n"+", \n".join(valid_items),
+					metavar='ITEM')
 parser.add_argument('times', type=int, nargs='?', default=1,
 					help="how many items shall be produced")
 

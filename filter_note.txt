@@ -1,0 +1,4 @@
+hxnormalize -l 32767 -x /tmp/gw2.txt | \
+	grep -A 1 '<div class="item"' | \
+	grep 'class="item"' | \
+	sed 's/^\([[:space:]]\+\)<div.* \/> \([[:digit:]]\+\)x <a class=.*href="\/item\/\([^"]\+\)".*>\([^<]\+\)<\/a>.*$/\1'\''\4'\'' : (\3, \2,/'
